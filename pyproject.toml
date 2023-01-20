@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "hollys"
+version = "0.1.0"
+description = ""
+authors = ["heumsi"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+pynecone-io = "^0.1.13"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

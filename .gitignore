@@ -1,0 +1,7 @@
+pynecone.db
+.web
+
+.venv
+.idea/
+.vscode/
+__pycache__/
