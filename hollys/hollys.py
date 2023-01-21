@@ -1,84 +1,14 @@
-import uuid
-from typing import List, Optional
-
 import pynecone as pc
-from kubernetes import client, config
-from sqlmodel import JSON, Column, Field
+from kubernetes import config
 
+# comment(heumsi): kube config needs to be loaded first before any other packages are imported.
 try:
     config.load_kube_config()
 except:
     config.load_incluster_config()
 
 
-def get_nodes(labels: Optional[List[str]] = None) -> List[str]:
-    if not labels:
-        labels = []
-    v1_api = client.CoreV1Api()
-    node_list = v1_api.list_node(label_selector=",".join(labels))
-    return [node.metadata.name for node in node_list.items]
-
-
-def get_id() -> str:
-    return str(uuid.uuid4())
-
-
-class SavedFilter(pc.Model, table=True):
-    name_: str  # comment(heumsi): 'name' cannot be used as var name, because when I used this, wrong value appeared.
-    labels: List[str] = Field(sa_column=Column(JSON))
-    id: str = Field(default_factory=get_id, primary_key=True)
-
-
-def add_saved_filter(saved_filter: SavedFilter) -> None:
-    with pc.session() as session:
-        session.add(saved_filter)
-        session.commit()
-
-
-class State(pc.State):
-    labels: List[str] = []
-    label: str = ""
-    nodes: List[str] = get_nodes()
-    # saved_filters: List[SavedFilter] = []
-
-    def add_label(self) -> None:
-        if not self.label:
-            return
-        self.labels += [self.label]
-        self.label = ""
-        self.nodes = get_nodes(self.labels)
-
-    def remove_label(self, label: str) -> None:
-        self.labels = [_label for _label in self.labels if _label != label]
-        self.nodes = get_nodes(self.labels)
-
-    def set_by_saved_filter(self, saved_filter: SavedFilter) -> None:
-        self.labels = saved_filter["labels"]
-        self.nodes = get_nodes(self.labels)
-
-    @pc.var
-    def list_saved_filter(self) -> List[SavedFilter]:
-        with pc.session() as session:
-            return session.query(SavedFilter).all()
-
-
-class ModalState(State):
-    show: bool = False
-    name: str = ""
-    saved_filters: List[SavedFilter] = [SavedFilter(name_="default", labels=[])]
-
-    def cancel(self) -> None:
-        self.show = not (self.show)
-        self.name = ""
-
-    def done(self) -> None:
-        saved_filter = SavedFilter(name_=self.name, labels=self.labels)
-        add_saved_filter(saved_filter)
-        self.show = not (self.show)
-        self.name = ""
-
-    def toggle_show(self) -> None:
-        self.show = not (self.show)
+from hollys.state import ModalState, State
 
 
 def index():
