@@ -3,8 +3,7 @@ import uuid
 
 # from pydantic import BaseModel, Field
 import pynecone as pc
-from pynecone.base import Base
-from pydantic import Field
+from sqlmodel import Field, JSON, Column
 from kubernetes import client, config
 
 
@@ -25,10 +24,20 @@ def get_id() -> str:
     return str(uuid.uuid4())
 
 
-class SavedFilter(Base):
+
+class SavedFilter(pc.Model, table=True):
     name_: str  # comment(heumsi): 'name' cannot be used as var name, because when I used this, wrong value appeared.
-    labels: List[str]
-    id: str = Field(default_factory=get_id)
+    labels: List[str] = Field(sa_column=Column(JSON))
+    id: str = Field(default_factory=get_id, primary_key=True)
+
+    # class Config:
+    #     arbitrary_types_allowed = True
+
+
+def add_saved_filter(saved_filter: SavedFilter) -> None:
+    with pc.session() as session:
+        session.add(saved_filter)
+        session.commit()
 
 
 class State(pc.State):
@@ -49,10 +58,17 @@ class State(pc.State):
         self.nodes = get_nodes(self.labels)
 
     def set_by_saved_filter(self, saved_filter: SavedFilter) -> None:
-        print(type(saved_filter))
-        print(saved_filter)
         self.labels = saved_filter["labels"]
         self.nodes = get_nodes(self.labels)
+
+    # def list_saved_filter(self) -> List[SavedFilter]:
+    #     with pc.session() as session:
+    #         return session.query(SavedFilter).all()
+
+    @pc.var
+    def list_saved_filter(self) -> List[SavedFilter]:
+        with pc.session() as session:
+            return session.query(SavedFilter).all()
 
 
 class ModalState(State):
@@ -66,7 +82,8 @@ class ModalState(State):
 
     def done(self) -> None:
         saved_filter = SavedFilter(name_=self.name, labels=self.labels)
-        self.saved_filters += [saved_filter]
+        # self.saved_filters += [saved_filter]
+        add_saved_filter(saved_filter)
         self.show = not (self.show)
         self.name = ""
 
@@ -83,7 +100,7 @@ def index():
                 pc.divider(),
                 pc.vstack(
                     pc.foreach(
-                        ModalState.saved_filters, 
+                        State.list_saved_filter,
                         lambda saved_filter: pc.vstack(
                             pc.text(saved_filter.name_, on_click=lambda: State.set_by_saved_filter(saved_filter))
                         )
