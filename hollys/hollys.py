@@ -1,6 +1,8 @@
 import pynecone as pc
 from kubernetes import config
 
+from hollys.model import SavedFilter
+
 # comment(heumsi): kube config needs to be loaded first before any other packages are imported.
 try:
     config.load_kube_config()
@@ -21,10 +23,19 @@ def index():
                     pc.foreach(
                         State.list_saved_filter,
                         lambda saved_filter: pc.vstack(
-                            pc.text(
-                                saved_filter.name_,
-                                on_click=lambda: State.set_by_saved_filter(
-                                    saved_filter
+                            pc.hstack(
+                                pc.text(
+                                    saved_filter.name_,
+                                    on_click=lambda: State.set_by_saved_filter(
+                                        saved_filter
+                                    ),
+                                ),
+                                pc.button(
+                                    pc.icon(tag="CloseIcon"),
+                                    color_scheme="red",
+                                    on_click=lambda: State.remove_saved_filter(
+                                        saved_filter.id
+                                    ),
                                 ),
                             )
                         ),

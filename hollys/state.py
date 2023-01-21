@@ -2,7 +2,12 @@ from typing import List
 
 import pynecone as pc
 
-from hollys.function import add_saved_filter, get_nodes
+from hollys.api import (
+    add_saved_filter,
+    get_nodes,
+    list_saved_filter,
+    remove_saved_filter,
+)
 from hollys.model import SavedFilter
 
 
@@ -28,8 +33,10 @@ class State(pc.State):
 
     @pc.var
     def list_saved_filter(self) -> List[SavedFilter]:
-        with pc.session() as session:
-            return session.query(SavedFilter).all()
+        return list_saved_filter()
+
+    def remove_saved_filter(self, saved_filter_id: str) -> None:
+        remove_saved_filter(saved_filter_id)
 
 
 class ModalState(State):
