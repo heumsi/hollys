@@ -3,7 +3,7 @@ from typing import List, Optional
 import pynecone as pc
 from kubernetes import client
 
-from hollys.model import SavedFilter
+from hollys import model
 
 
 def get_nodes(labels: Optional[List[str]] = None) -> List[str]:
@@ -14,12 +14,12 @@ def get_nodes(labels: Optional[List[str]] = None) -> List[str]:
     return [node.metadata.name for node in node_list.items]
 
 
-def list_saved_filter() -> List[SavedFilter]:
+def list_saved_filter() -> List[model.SavedFilter]:
     with pc.session() as session:
-        return session.query(SavedFilter).all()
+        return session.query(model.SavedFilter).all()
 
 
-def add_saved_filter(saved_filter: SavedFilter) -> None:
+def add_saved_filter(saved_filter: model.SavedFilter) -> None:
     with pc.session() as session:
         session.add(saved_filter)
         session.commit()
@@ -27,6 +27,6 @@ def add_saved_filter(saved_filter: SavedFilter) -> None:
 
 def remove_saved_filter(saved_filter_id: str) -> None:
     with pc.session() as session:
-        saved_filter = session.get(SavedFilter, saved_filter_id)
+        saved_filter = session.get(model.SavedFilter, saved_filter_id)
         session.delete(saved_filter)
         session.commit()
