@@ -48,12 +48,17 @@ class State(pc.State):
         self.labels = [_label for _label in self.labels if _label != label]
         self.nodes = get_nodes(self.labels)
 
+    def set_by_saved_filter(self, saved_filter: SavedFilter) -> None:
+        print(type(saved_filter))
+        print(saved_filter)
+        self.labels = saved_filter["labels"]
+        self.nodes = get_nodes(self.labels)
 
 
 class ModalState(State):
     show: bool = False
     name: str = ""
-    saved_filters: List[SavedFilter] = []
+    saved_filters: List[SavedFilter] = [SavedFilter(name_="default", labels=[])]
 
     def cancel(self) -> None:
         self.show = not (self.show)
@@ -80,7 +85,7 @@ def index():
                     pc.foreach(
                         ModalState.saved_filters, 
                         lambda saved_filter: pc.vstack(
-                            pc.text(saved_filter.name_)
+                            pc.text(saved_filter.name_, on_click=lambda: State.set_by_saved_filter(saved_filter))
                         )
                     )
                 ),
