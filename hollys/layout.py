@@ -54,6 +54,13 @@ def content(State, ModalState):
     return pc.box(
         pc.heading(State.name_, size="lg", margin="0 0 1rem 0"),
         pc.heading("Labels", size="md", padding="1rem 0"),
+        pc.text(
+            State.labels.length()
+            + " items",  # comment(heumsi): It seems that f-string is not supported yet.
+            margin_top="-0.5rem",
+            font_size="xs",
+            color=style.get_color("gray", 500),
+        ),
         pc.box(
             pc.foreach(
                 State.labels,
@@ -68,9 +75,16 @@ def content(State, ModalState):
                 ),
             ),
             min_height="50px",
-            padding_inline="1rem",
+            padding="1rem",
         ),
         pc.heading("Nodes", size="md", padding="1rem 0"),
+        pc.text(
+            State.nodes.length()
+            + " items",  # comment(heumsi): It seems that f-string is not supported yet.
+            margin_top="-0.5rem",
+            font_size="xs",
+            color=style.get_color("gray", 500),
+        ),
         pc.box(
             pc.foreach(
                 State.nodes,
@@ -85,7 +99,7 @@ def content(State, ModalState):
                 ),
             ),
             min_height="50px",
-            padding_inline="1rem",
+            padding="1rem",
         ),
         width="80%",
         height="100%",
