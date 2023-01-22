@@ -25,13 +25,6 @@ def sidebar(State):
                         padding="0 0 0 1rem",
                         on_click=lambda: State.set_by_saved_filter(saved_filter),
                     ),
-                    pc.spacer(),
-                    pc.text(
-                        pc.icon(tag="CloseIcon"),
-                        font_size="0.75rem",
-                        bg=None,
-                        on_click=lambda: State.remove_saved_filter(saved_filter.id),
-                    ),
                     padding="0.2rem 0",
                     color="#00000080",
                     _hover={
@@ -52,7 +45,22 @@ def sidebar(State):
 
 def content(State, ModalState):
     return pc.box(
-        pc.heading(State.name_, size="lg", margin="0 0 1rem 0"),
+        pc.flex(
+            pc.heading(State.name_, size="lg"),
+            pc.spacer(),
+            pc.text(
+                "Delete",
+                font_size="sm",
+                color=style.get_color("gray", 500),
+                _hover={
+                    "color": "#000000",
+                    "cursor": "pointer",
+                },
+                on_click=lambda: State.remove_saved_filter(),
+            ),
+            margin="0 0 1rem 0",
+            align_items="flex-end",
+        ),
         pc.heading("Labels", size="md", padding="1rem 0"),
         pc.text(
             State.labels.length()
