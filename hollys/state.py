@@ -33,20 +33,19 @@ class State(pc.State):
     def list_saved_filter(self) -> List[model.SavedFilter]:
         return api.list_saved_filter()
 
-    def remove_saved_filter(self) -> None:
+    def remove_saved_filter(self):
         api.remove_saved_filter(self.id)
         self.name_ = ""
         self.id = ""
-        self.nodes = []
         self.labels = []
+        self.nodes = api.get_nodes()
+        return pc.redirect("/")
 
 
 class ModalState(State):
     show: bool = False
     name: str = ""
-    saved_filters: List[model.SavedFilter] = [
-        model.SavedFilter(name_="default", labels=[])
-    ]
+    description: str = ""
 
     def cancel(self) -> None:
         self.show = not self.show
