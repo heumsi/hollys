@@ -68,6 +68,13 @@ def saved_filter_content(State, ModalState):
             margin="0 0 1rem 0",
             align_items="flex-end",
         ),
+        pc.text(
+            State.description_,
+            margin_top="-0.5rem",
+            min_height="2rem",
+            font_size="xs",
+            color=style.get_color("gray", 500),
+        ),
         pc.heading("Labels", size="md", padding="1rem 0"),
         pc.text(
             State.labels.length()

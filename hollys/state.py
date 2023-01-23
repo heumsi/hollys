@@ -9,6 +9,7 @@ class State(pc.State):
     labels: List[str] = []
     label: str = ""
     name_: str = ""
+    description_: str = ""
     id: str = ""
     nodes: List[str] = api.get_nodes()
 
@@ -31,6 +32,7 @@ class State(pc.State):
     def set_by_saved_filter(self, saved_filter: model.SavedFilter) -> None:
         self.id = saved_filter["id"]
         self.name_ = saved_filter["name_"]
+        self.description_ = saved_filter["description_"]
         self.labels = saved_filter["labels"]
         self.nodes = api.get_nodes(self.labels)
 
@@ -57,7 +59,9 @@ class ModalState(State):
         self.name = ""
 
     def done(self) -> None:
-        saved_filter = model.SavedFilter(name_=self.name, labels=self.labels)
+        saved_filter = model.SavedFilter(
+            name_=self.name, description_=self.description, labels=self.labels
+        )
         api.add_saved_filter(saved_filter)
         self.show = not self.show
         self.name = ""
