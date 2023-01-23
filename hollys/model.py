@@ -15,3 +15,6 @@ class SavedFilter(pc.Model, table=True):
     description_: str = Field(sa_column=Column("description", String, default=""))
     labels: List[str] = Field(sa_column=Column(JSON))
     id: str = Field(default_factory=_get_id, primary_key=True)
+
+
+pc.Model.create_all()

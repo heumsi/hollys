@@ -5,66 +5,94 @@ import pynecone as pc
 from hollys import api, model
 
 
-class State(pc.State):
+class BaseState(pc.State):
+    ...
+
+
+class SidebarState(BaseState):
+    saved_filters: List[model.SavedFilter] = api.list_saved_filter()
+
+    def refresh_saved_filters(self) -> None:
+        self.saved_filters = api.list_saved_filter()
+
+
+class QueryState(BaseState):
+    label: str
     labels: List[str] = []
-    label: str = ""
-    name_: str = ""
-    description_: str = ""
-    id: str = ""
     nodes: List[str] = api.get_nodes()
 
     def add_label(self) -> None:
         if not self.label:
             return
         self.labels += [self.label]
-        self.label = ""
-        self.nodes = api.get_nodes(self.labels)
+        # comment(heumsi): This will be deprecated after following issue is resolved
+        # https://github.com/pynecone-io/pynecone/issues/319
+        return self.refresh_nodes()
 
     def remove_label(self, label: str) -> None:
         self.labels = [_label for _label in self.labels if _label != label]
+        # comment(heumsi): This will be deprecated after following issue is resolved
+        # https://github.com/pynecone-io/pynecone/issues/319
+        return self.refresh_nodes()
+
+    def reset_label(self) -> None:
+        self.label = ""
+
+    def reset_labels(self) -> None:
+        self.labels = []
+        # comment(heumsi): This will be deprecated after following issue is resolved
+        # https://github.com/pynecone-io/pynecone/issues/319
+        return self.refresh_nodes()
+
+    def reset(self):
+        return [self.reset_label(), self.reset_labels(), self.refresh_nodes()]
+
+    def refresh_nodes(self) -> None:
         self.nodes = api.get_nodes(self.labels)
 
-    def reset(self) -> None:
-        self.labels = []
-        self.label = ""
-        self.nodes = api.get_nodes()
 
-    def set_by_saved_filter(self, saved_filter: model.SavedFilter) -> None:
+class SavedFilterState(BaseState):
+    labels: List[str] = []
+    name_: str = ""
+    description_: str = ""
+    id: str = ""
+    nodes: List[str] = api.get_nodes()
+
+    def set_by_model(self, saved_filter) -> None:
         self.id = saved_filter["id"]
         self.name_ = saved_filter["name_"]
         self.description_ = saved_filter["description_"]
         self.labels = saved_filter["labels"]
         self.nodes = api.get_nodes(self.labels)
 
-    @pc.var
-    def list_saved_filter(self) -> List[model.SavedFilter]:
-        return api.list_saved_filter()
-
-    def remove_saved_filter(self):
+    def delete(self):
         api.remove_saved_filter(self.id)
-        self.name_ = ""
-        self.id = ""
-        self.labels = []
-        self.nodes = api.get_nodes()
-        return pc.redirect("/")
+        return [SidebarState.refresh_saved_filters(), pc.redirect("/")]
 
 
-class ModalState(State):
+class SaveModalState(BaseState):
     show: bool = False
     name: str = ""
     description: str = ""
 
-    def cancel(self) -> None:
+    def cancel(self):
         self.show = not self.show
-        self.name = ""
+        return self.reset()
 
-    def done(self) -> None:
+    def done(self, labels: List[str]):
         saved_filter = model.SavedFilter(
-            name_=self.name, description_=self.description, labels=self.labels
+            name_=self.name, description_=self.description, labels=labels
         )
         api.add_saved_filter(saved_filter)
         self.show = not self.show
+        return [
+            self.reset(),
+            SidebarState.refresh_saved_filters,
+        ]
+
+    def reset(self) -> None:
         self.name = ""
+        self.description = ""
 
     def toggle_show(self) -> None:
         self.show = not self.show

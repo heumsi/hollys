@@ -1,6 +1,7 @@
 import pynecone as pc
 
 from hollys import style
+from hollys.state import SavedFilterState, SidebarState
 
 
 def header():
@@ -13,7 +14,7 @@ def header():
     )
 
 
-def sidebar(State):
+def sidebar():
     return pc.box(
         pc.box(
             pc.link(pc.text("Query", font_size="1em"), href="/query"),
@@ -21,13 +22,15 @@ def sidebar(State):
         pc.box(
             pc.text("Saved filters", font_size="xs", margin="0 0 1rem 0"),
             pc.foreach(
-                State.list_saved_filter,
+                SidebarState.saved_filters,
                 lambda saved_filter: pc.box(
                     pc.link(
                         pc.text(
                             saved_filter.name_,
                             padding="0 0 0 1rem",
-                            on_click=lambda: State.set_by_saved_filter(saved_filter),
+                            on_click=lambda: SavedFilterState.set_by_model(
+                                saved_filter
+                            ),
                             font_size="1rem",
                         ),
                         href="/filters",
@@ -50,243 +53,9 @@ def sidebar(State):
     )
 
 
-def saved_filter_content(State, ModalState):
-    return pc.box(
-        pc.flex(
-            pc.heading(State.name_, size="lg"),
-            pc.spacer(),
-            pc.text(
-                "Delete",
-                font_size="sm",
-                color=style.get_color("gray", 500),
-                _hover={
-                    "color": "#000000",
-                    "cursor": "pointer",
-                },
-                on_click=lambda: State.remove_saved_filter(),
-            ),
-            margin="0 0 1rem 0",
-            align_items="flex-end",
-        ),
-        pc.text(
-            State.description_,
-            margin_top="-0.5rem",
-            min_height="2rem",
-            font_size="xs",
-            color=style.get_color("gray", 500),
-        ),
-        pc.heading("Labels", size="md", padding="1rem 0"),
-        pc.text(
-            State.labels.length()
-            + " items",  # comment(heumsi): It seems that f-string is not supported yet.
-            margin_top="-0.5rem",
-            font_size="xs",
-            color=style.get_color("gray", 500),
-        ),
-        pc.box(
-            pc.foreach(
-                State.labels,
-                lambda label: pc.box(
-                    pc.text(label),
-                    width="fit-content",
-                    margin="0.5rem",
-                    padding="0.5rem",
-                    display="inline-block",
-                    bg=style.get_color("gray", 50),
-                    font_size="sm",
-                ),
-            ),
-            min_height="50px",
-            padding="1rem",
-        ),
-        pc.heading("Nodes", size="md", padding="1rem 0"),
-        pc.text(
-            State.nodes.length()
-            + " items",  # comment(heumsi): It seems that f-string is not supported yet.
-            margin_top="-0.5rem",
-            font_size="xs",
-            color=style.get_color("gray", 500),
-        ),
-        pc.box(
-            pc.foreach(
-                State.nodes,
-                lambda node: pc.box(
-                    pc.text(node),
-                    width="fit-content",
-                    margin="0.5rem",
-                    padding="0.5rem",
-                    display="inline-block",
-                    bg=style.get_color("gray", 50),
-                    font_size="sm",
-                ),
-            ),
-            min_height="50px",
-            padding="1rem",
-        ),
-        width="80%",
-        height="100%",
-        padding="1rem",
-    )
-
-
-def query_content(State, ModalState):
-    return pc.box(
-        pc.flex(
-            pc.heading("Query", size="lg"),
-            pc.spacer(),
-            pc.hstack(
-                pc.text(
-                    "Reset",
-                    font_size="sm",
-                    color=style.get_color("gray", 500),
-                    _hover={
-                        "color": "#000000",
-                        "cursor": "pointer",
-                    },
-                    on_click=lambda: State.reset(),
-                ),
-                pc.text(
-                    "Save",
-                    font_size="sm",
-                    color=style.get_color("gray", 500),
-                    _hover={
-                        "color": "#000000",
-                        "cursor": "pointer",
-                    },
-                    on_click=lambda: ModalState.toggle_show(),
-                ),
-                spacing="1rem",
-            ),
-            margin="0 0 1rem 0",
-            align_items="flex-end",
-        ),
-        pc.heading("Labels", size="md", padding="1rem 0"),
-        pc.hstack(
-            pc.input(value=State.label, on_change=State.set_label),
-            pc.button(
-                pc.icon(tag="AddIcon"),
-                color_scheme="green",
-                on_click=lambda: State.add_label(),
-            ),
-        ),
-        pc.text(
-            State.labels.length()
-            + " items",  # comment(heumsi): It seems that f-string is not supported yet.
-            margin_top="0.5rem",
-            font_size="xs",
-            color=style.get_color("gray", 500),
-        ),
-        pc.box(
-            pc.foreach(
-                State.labels,
-                lambda label: pc.hstack(
-                    pc.box(
-                        pc.text(label),
-                        width="fit-content",
-                        margin="0.5rem",
-                        margin_right="0rem",
-                        padding="0.5rem",
-                        display="inline-block",
-                        bg=style.get_color("gray", 50),
-                        font_size="sm",
-                    ),
-                    pc.icon(
-                        tag="CloseIcon",
-                        margin="0",
-                        pading="0",
-                        color=style.get_color("gray", 300),
-                        font_size="0.5rem",
-                        _hover={
-                            "color": "#000000",
-                            "cursor": "pointer",
-                        },
-                        on_click=lambda: State.remove_label(label),
-                    ),
-                ),
-            ),
-            min_height="50px",
-            padding="1rem",
-        ),
-        pc.heading("Nodes", size="md", padding="1rem 0"),
-        pc.text(
-            State.nodes.length()
-            + " items",  # comment(heumsi): It seems that f-string is not supported yet.
-            margin_top="-0.5rem",
-            font_size="xs",
-            color=style.get_color("gray", 500),
-        ),
-        pc.box(
-            pc.foreach(
-                State.nodes,
-                lambda node: pc.box(
-                    pc.text(node),
-                    width="fit-content",
-                    margin="0.5rem",
-                    padding="0.5rem",
-                    display="inline-block",
-                    bg=style.get_color("gray", 50),
-                    font_size="sm",
-                ),
-            ),
-            min_height="50px",
-            padding="1rem",
-        ),
-        pc.modal(
-            pc.modal_overlay(
-                pc.modal_content(
-                    pc.modal_header("Save"),
-                    pc.modal_body(
-                        pc.vstack(
-                            pc.form_control(
-                                pc.form_label("Name"),
-                                pc.input(
-                                    placeholder="Name",
-                                    value=ModalState.name,
-                                    on_change=ModalState.set_name,
-                                ),
-                                pc.form_helper_text(
-                                    "This value will appear in the saved filter list"
-                                ),
-                                is_required=True,
-                            ),
-                            pc.form_control(
-                                pc.form_label("Description"),
-                                pc.input(
-                                    placeholder="Description",
-                                    value=ModalState.description,
-                                    on_change=ModalState.set_description,
-                                ),
-                                pc.form_helper_text(
-                                    "Write it down so that others can understand it"
-                                ),
-                            ),
-                            spacing="1rem",
-                            align_items="flex-start",
-                        ),
-                    ),
-                    pc.modal_footer(
-                        pc.hstack(
-                            pc.button(
-                                "Done",
-                                color_scheme="green",
-                                on_click=ModalState.done,
-                            ),
-                            pc.button("Cancel", on_click=ModalState.cancel),
-                        ),
-                    ),
-                )
-            ),
-            is_open=ModalState.show,
-        ),
-        width="80%",
-        height="100%",
-        padding="1rem",
-    )
-
-
-def body(sidebar, content):
+def body(content):
     return pc.hstack(
-        sidebar,
+        sidebar(),
         content,
         width="100%",
         height="100%",
@@ -294,4 +63,14 @@ def body(sidebar, content):
         align_itrems="flex-start",
         spacing="0",
         bg=style.Color.body_bg,
+    )
+
+
+def page(content):
+    return pc.vstack(
+        header(),
+        body(content),
+        spacing="0",
+        width="100vw",
+        height="100vh",
     )
