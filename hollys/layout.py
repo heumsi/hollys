@@ -127,15 +127,28 @@ def query_content(State, ModalState):
         pc.flex(
             pc.heading("Query", size="lg"),
             pc.spacer(),
-            pc.text(
-                "Save",
-                font_size="sm",
-                color=style.get_color("gray", 500),
-                _hover={
-                    "color": "#000000",
-                    "cursor": "pointer",
-                },
-                on_click=lambda: ModalState.toggle_show(),
+            pc.hstack(
+                pc.text(
+                    "Reset",
+                    font_size="sm",
+                    color=style.get_color("gray", 500),
+                    _hover={
+                        "color": "#000000",
+                        "cursor": "pointer",
+                    },
+                    on_click=lambda: State.reset(),
+                ),
+                pc.text(
+                    "Save",
+                    font_size="sm",
+                    color=style.get_color("gray", 500),
+                    _hover={
+                        "color": "#000000",
+                        "cursor": "pointer",
+                    },
+                    on_click=lambda: ModalState.toggle_show(),
+                ),
+                spacing="1rem",
             ),
             margin="0 0 1rem 0",
             align_items="flex-end",

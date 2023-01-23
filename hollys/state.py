@@ -8,7 +8,7 @@ from hollys import api, model
 class State(pc.State):
     labels: List[str] = []
     label: str = ""
-    name_: str = "Default"
+    name_: str = ""
     id: str = ""
     nodes: List[str] = api.get_nodes()
 
@@ -22,6 +22,11 @@ class State(pc.State):
     def remove_label(self, label: str) -> None:
         self.labels = [_label for _label in self.labels if _label != label]
         self.nodes = api.get_nodes(self.labels)
+
+    def reset(self) -> None:
+        self.labels = []
+        self.label = ""
+        self.nodes = api.get_nodes()
 
     def set_by_saved_filter(self, saved_filter: model.SavedFilter) -> None:
         self.id = saved_filter["id"]
