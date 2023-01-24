@@ -36,134 +36,143 @@ def content():
             margin="0 0 1rem 0",
             align_items="flex-end",
         ),
-        pc.heading("Labels", size="md", padding="1rem 0"),
-        pc.hstack(
-            pc.input(value=QueryState.label, on_change=QueryState.set_label),
-            pc.button(
-                pc.icon(tag="AddIcon"),
-                color_scheme="green",
-                on_click=[
-                    QueryState.add_label,
-                    QueryState.reset_label,
-                    QueryState.refresh_nodes,
-                ],
-            ),
-        ),
-        pc.text(
-            # comment(heumsi): It seems that f-string is not supported yet.
-            QueryState.labels.length() + " items",
-            margin_top="0.5rem",
-            font_size="xs",
-            color=get_color("gray", 500),
-        ),
         pc.box(
-            pc.foreach(
-                QueryState.labels,
-                lambda label: pc.hstack(
-                    pc.box(
-                        pc.text(label),
-                        width="fit-content",
-                        margin="0.5rem",
-                        margin_right="0rem",
-                        padding="0.5rem",
-                        display="inline-block",
-                        bg=get_color("gray", 50),
-                        font_size="sm",
-                    ),
-                    pc.icon(
-                        tag="CloseIcon",
-                        margin="0",
-                        pading="0",
-                        color=get_color("gray", 300),
-                        font_size="0.5rem",
-                        _hover={
-                            "color": "#000000",
-                            "cursor": "pointer",
-                        },
-                        on_click=lambda: QueryState.remove_label(label),
+            pc.heading("Filter", size="md", padding="1rem 0"),
+            pc.box(
+                pc.heading("Labels", size="sm", padding="1rem 0"),
+                pc.hstack(
+                    pc.input(value=QueryState.label, on_change=QueryState.set_label),
+                    pc.button(
+                        pc.icon(tag="AddIcon"),
+                        color_scheme="green",
+                        on_click=[
+                            QueryState.add_label,
+                            QueryState.reset_label,
+                            QueryState.refresh_nodes,
+                        ],
                     ),
                 ),
-            ),
-            min_height="50px",
-            padding="1rem",
-        ),
-        pc.heading("Taints", size="md", padding="1rem 0"),
-        pc.hstack(
-            pc.input(value=QueryState.taint, on_change=QueryState.set_taint),
-            pc.button(
-                pc.icon(tag="AddIcon"),
-                color_scheme="green",
-                on_click=[
-                    QueryState.add_taint,
-                    QueryState.reset_taint,
-                    QueryState.refresh_nodes,
-                ],
-            ),
-        ),
-        pc.text(
-            # comment(heumsi): It seems that f-string is not supported yet.
-            QueryState.taints.length() + " items",
-            margin_top="0.5rem",
-            font_size="xs",
-            color=get_color("gray", 500),
-        ),
-        pc.box(
-            pc.foreach(
-                QueryState.taints,
-                lambda taint: pc.hstack(
-                    pc.box(
-                        pc.text(taint),
-                        width="fit-content",
-                        margin="0.5rem",
-                        margin_right="0rem",
-                        padding="0.5rem",
-                        display="inline-block",
-                        bg=get_color("gray", 50),
-                        font_size="sm",
+                pc.text(
+                    # comment(heumsi): It seems that f-string is not supported yet.
+                    QueryState.labels.length() + " items",
+                    margin_top="0.5rem",
+                    font_size="xs",
+                    color=get_color("gray", 500),
+                ),
+                pc.box(
+                    pc.foreach(
+                        QueryState.labels,
+                        lambda label: pc.hstack(
+                            pc.box(
+                                pc.text(label),
+                                width="fit-content",
+                                margin="0.5rem 0.5rem 0.5rem 0",
+                                padding="0.5rem",
+                                display="inline-block",
+                                bg=get_color("gray", 50),
+                                font_size="sm",
+                            ),
+                            pc.icon(
+                                tag="CloseIcon",
+                                margin="0",
+                                pading="0",
+                                color=get_color("gray", 300),
+                                font_size="0.5rem",
+                                _hover={
+                                    "color": "#000000",
+                                    "cursor": "pointer",
+                                },
+                                on_click=lambda: QueryState.remove_label(label),
+                            ),
+                        ),
                     ),
-                    pc.icon(
-                        tag="CloseIcon",
-                        margin="0",
-                        pading="0",
-                        color=get_color("gray", 300),
-                        font_size="0.5rem",
-                        _hover={
-                            "color": "#000000",
-                            "cursor": "pointer",
-                        },
-                        on_click=lambda: QueryState.remove_taint(taint),
+                    min_height="50px",
+                    padding="1rem",
+                ),
+                pc.heading("Taints", size="sm", padding="1rem 0"),
+                pc.hstack(
+                    pc.input(value=QueryState.taint, on_change=QueryState.set_taint),
+                    pc.button(
+                        pc.icon(tag="AddIcon"),
+                        color_scheme="green",
+                        on_click=[
+                            QueryState.add_taint,
+                            QueryState.reset_taint,
+                            QueryState.refresh_nodes,
+                        ],
                     ),
                 ),
+                pc.text(
+                    # comment(heumsi): It seems that f-string is not supported yet.
+                    QueryState.taints.length() + " items",
+                    margin_top="0.5rem",
+                    font_size="xs",
+                    color=get_color("gray", 500),
+                ),
+                pc.box(
+                    pc.foreach(
+                        QueryState.taints,
+                        lambda taint: pc.hstack(
+                            pc.box(
+                                pc.text(taint),
+                                width="fit-content",
+                                margin="0.5rem 0.5rem 0.5rem 0",
+                                display="inline-block",
+                                bg=get_color("gray", 50),
+                                font_size="sm",
+                            ),
+                            pc.icon(
+                                tag="CloseIcon",
+                                margin="0",
+                                pading="0",
+                                color=get_color("gray", 300),
+                                font_size="0.5rem",
+                                _hover={
+                                    "color": "#000000",
+                                    "cursor": "pointer",
+                                },
+                                on_click=lambda: QueryState.remove_taint(taint),
+                            ),
+                        ),
+                    ),
+                    min_height="50px",
+                    padding="1rem",
+                ),
+                padding_left="1rem",
             ),
-            min_height="50px",
-            padding="1rem",
-        ),
-        pc.heading("Nodes", size="md", padding="1rem 0"),
-        pc.text(
-            QueryState.nodes.length()
-            + " items",  # comment(heumsi): It seems that f-string is not supported yet.
-            margin_top="-0.5rem",
-            font_size="xs",
-            color=get_color("gray", 500),
         ),
         pc.box(
-            pc.foreach(
-                QueryState.nodes,
-                lambda node: pc.box(
-                    pc.skeleton(
-                        pc.text(node),
-                        is_loaded=QueryState.is_loaded,
-                    ),
-                    width="fit-content",
-                    margin="0.5rem",
-                    padding="0.5rem",
-                    display="inline-block",
-                    bg=get_color("gray", 50),
-                    font_size="sm",
+            pc.heading("Result", size="md", padding="1rem 0"),
+            pc.box(
+                pc.heading("Nodes", size="sm", padding="1rem 0"),
+                pc.text(
+                    QueryState.nodes.length()
+                    + " items",  # comment(heumsi): It seems that f-string is not supported yet.
+                    margin_top="-0.5rem",
+                    font_size="xs",
+                    color=get_color("gray", 500),
                 ),
+                pc.box(
+                    pc.foreach(
+                        QueryState.nodes,
+                        lambda node: pc.box(
+                            pc.skeleton(
+                                pc.text(node),
+                                is_loaded=QueryState.is_loaded,
+                            ),
+                            width="fit-content",
+                            margin="0.5rem 0.5rem 0.5rem 0",
+                            padding="0.5rem",
+                            display="inline-block",
+                            bg=get_color("gray", 50),
+                            font_size="sm",
+                        ),
+                    ),
+                    min_height="50px",
+                    padding="1rem 0",
+                ),
+                padding_left="1rem",
             ),
-            min_height="50px",
-            padding="1rem",
         ),
         save_modal(),
         width="80%",

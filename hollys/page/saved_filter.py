@@ -30,80 +30,92 @@ def content():
             font_size="xs",
             color=get_color("gray", 500),
         ),
-        pc.heading("Labels", size="md", padding="1rem 0"),
-        pc.text(
-            SavedFilterState.labels.length()
-            + " items",  # comment(heumsi): It seems that f-string is not supported yet.
-            margin_top="-0.5rem",
-            font_size="xs",
-            color=get_color("gray", 500),
-        ),
         pc.box(
-            pc.foreach(
-                SavedFilterState.labels,
-                lambda label: pc.box(
-                    pc.text(label),
-                    width="fit-content",
-                    margin="0.5rem",
-                    padding="0.5rem",
-                    display="inline-block",
-                    bg=get_color("gray", 50),
-                    font_size="sm",
+            pc.heading("Filter", size="md", padding="1rem 0"),
+            pc.box(
+                pc.heading("Labels", size="sm", padding="1rem 0"),
+                pc.text(
+                    SavedFilterState.labels.length()
+                    + " items",  # comment(heumsi): It seems that f-string is not supported yet.
+                    margin_top="-0.5rem",
+                    font_size="xs",
+                    color=get_color("gray", 500),
                 ),
-            ),
-            min_height="50px",
-            padding="1rem",
-        ),
-        pc.heading("Taints", size="md", padding="1rem 0"),
-        pc.text(
-            SavedFilterState.taints.length()
-            + " items",  # comment(heumsi): It seems that f-string is not supported yet.
-            margin_top="-0.5rem",
-            font_size="xs",
-            color=get_color("gray", 500),
-        ),
-        pc.box(
-            pc.foreach(
-                SavedFilterState.taints,
-                lambda taint: pc.box(
-                    pc.text(taint),
-                    width="fit-content",
-                    margin="0.5rem",
-                    padding="0.5rem",
-                    display="inline-block",
-                    bg=get_color("gray", 50),
-                    font_size="sm",
-                ),
-            ),
-            min_height="50px",
-            padding="1rem",
-        ),
-        pc.heading("Nodes", size="md", padding="1rem 0"),
-        pc.text(
-            SavedFilterState.nodes.length()
-            + " items",  # comment(heumsi): It seems that f-string is not supported yet.
-            margin_top="-0.5rem",
-            font_size="xs",
-            color=get_color("gray", 500),
-        ),
-        pc.box(
-            pc.foreach(
-                SavedFilterState.nodes,
-                lambda node: pc.box(
-                    pc.skeleton(
-                        pc.text(node),
-                        is_loaded=SavedFilterState.is_loaded,
+                pc.box(
+                    pc.foreach(
+                        SavedFilterState.labels,
+                        lambda label: pc.box(
+                            pc.text(label),
+                            width="fit-content",
+                            margin="0.5rem 0.5rem 0.5rem 0",
+                            padding="0.5rem",
+                            display="inline-block",
+                            bg=get_color("gray", 50),
+                            font_size="sm",
+                        ),
                     ),
-                    width="fit-content",
-                    margin="0.5rem",
-                    padding="0.5rem",
-                    display="inline-block",
-                    bg=get_color("gray", 50),
-                    font_size="sm",
+                    min_height="50px",
+                    padding="1rem 0",
                 ),
+                pc.heading("Taints", size="sm", padding="1rem 0"),
+                pc.text(
+                    SavedFilterState.taints.length()
+                    + " items",  # comment(heumsi): It seems that f-string is not supported yet.
+                    margin_top="-0.5rem",
+                    font_size="xs",
+                    color=get_color("gray", 500),
+                ),
+                pc.box(
+                    pc.foreach(
+                        SavedFilterState.taints,
+                        lambda taint: pc.box(
+                            pc.text(taint),
+                            width="fit-content",
+                            margin="0.5rem 0.5rem 0.5rem 0",
+                            padding="0.5rem",
+                            display="inline-block",
+                            bg=get_color("gray", 50),
+                            font_size="sm",
+                        ),
+                    ),
+                    min_height="50px",
+                    padding="1rem 0",
+                ),
+                padding_left="1rem",
             ),
-            min_height="50px",
-            padding="1rem",
+        ),
+        pc.box(
+            pc.heading("Result", size="md", padding="1rem 0"),
+            pc.box(
+                pc.heading("Nodes", size="sm", padding="1rem 0"),
+                pc.text(
+                    SavedFilterState.nodes.length()
+                    + " items",  # comment(heumsi): It seems that f-string is not supported yet.
+                    margin_top="-0.5rem",
+                    font_size="xs",
+                    color=get_color("gray", 500),
+                ),
+                pc.box(
+                    pc.foreach(
+                        SavedFilterState.nodes,
+                        lambda node: pc.box(
+                            pc.skeleton(
+                                pc.text(node),
+                                is_loaded=SavedFilterState.is_loaded,
+                            ),
+                            width="fit-content",
+                            margin="0.5rem 0.5rem 0.5rem 0",
+                            padding="0.5rem",
+                            display="inline-block",
+                            bg=get_color("gray", 50),
+                            font_size="sm",
+                        ),
+                    ),
+                    min_height="50px",
+                    padding="1rem 0",
+                ),
+                padding_left="1rem",
+            ),
         ),
         width="80%",
         height="100%",
