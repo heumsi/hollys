@@ -21,14 +21,8 @@ class QueryState(BaseState):
     labels: List[str] = []
     taint: str
     taints: List[str] = []
-    nodes: List[str] = []
-    is_loaded: bool = False
-
-    def __init__(self, *args, **kwargs) -> None:
-        super().__init__(*args, **kwargs)
-        self.is_loaded = False
-        self.nodes = api.get_nodes(self.labels, self.taints)
-        self.is_loaded = True
+    nodes: List[str] = api.get_nodes()
+    is_loaded: bool = True
 
     def add_label(self):
         if not self.label:
