@@ -30,19 +30,19 @@ def get_nodes(
         return [node.metadata.name for node in nodes]
 
 
-def list_saved_filter() -> List[model.SavedFilter]:
+def list_saved_query() -> List[model.SavedQuery]:
     with pc.session() as session:
-        return session.query(model.SavedFilter).all()
+        return session.query(model.SavedQuery).all()
 
 
-def add_saved_filter(saved_filter: model.SavedFilter) -> None:
+def add_saved_query(saved_query: model.SavedQuery) -> None:
     with pc.session() as session:
-        session.add(saved_filter)
+        session.add(saved_query)
         session.commit()
 
 
-def remove_saved_filter(saved_filter_id: str) -> None:
+def remove_saved_query(saved_query_id: str) -> None:
     with pc.session() as session:
-        saved_filter = session.get(model.SavedFilter, saved_filter_id)
-        session.delete(saved_filter)
+        saved_query = session.get(model.SavedQuery, saved_query_id)
+        session.delete(saved_query)
         session.commit()

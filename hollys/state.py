@@ -10,10 +10,10 @@ class BaseState(pc.State):
 
 
 class SidebarState(BaseState):
-    saved_filters: List[model.SavedFilter] = api.list_saved_filter()
+    saved_querys: List[model.SavedQuery] = api.list_saved_query()
 
-    def refresh_saved_filters(self) -> None:
-        self.saved_filters = api.list_saved_filter()
+    def refresh_saved_querys(self) -> None:
+        self.saved_querys = api.list_saved_query()
 
 
 class QueryState(BaseState):
@@ -73,7 +73,7 @@ class QueryState(BaseState):
         self.taints = []
 
 
-class SavedFilterState(BaseState):
+class SavedQueryState(BaseState):
     labels: List[str] = []
     taints: List[str] = []
     name_: str = ""
@@ -82,13 +82,13 @@ class SavedFilterState(BaseState):
     is_loaded: bool = False
     nodes: List[str] = []
 
-    def set_by_model(self, saved_filter):
+    def set_by_model(self, saved_query):
         self.reset()
-        self.id = saved_filter["id"]
-        self.name_ = saved_filter["name_"]
-        self.description_ = saved_filter["description_"]
-        self.labels = saved_filter["labels"]
-        self.taints = saved_filter["taints"]
+        self.id = saved_query["id"]
+        self.name_ = saved_query["name_"]
+        self.description_ = saved_query["description_"]
+        self.labels = saved_query["labels"]
+        self.taints = saved_query["taints"]
         return self.refresh_nodes
 
     def refresh_nodes(self) -> None:
@@ -97,8 +97,8 @@ class SavedFilterState(BaseState):
         self.is_loaded = True
 
     def delete(self):
-        api.remove_saved_filter(self.id)
-        return [SidebarState.refresh_saved_filters, pc.redirect("/")]
+        api.remove_saved_query(self.id)
+        return [SidebarState.refresh_saved_querys, pc.redirect("/")]
 
 
 class SaveModalState(BaseState):
@@ -111,14 +111,14 @@ class SaveModalState(BaseState):
         return self.reset()
 
     def done(self, labels: List[str], taints: List[str]):
-        saved_filter = model.SavedFilter(
+        saved_query = model.SavedQuery(
             name_=self.name, description_=self.description, labels=labels, taints=taints
         )
-        api.add_saved_filter(saved_filter)
+        api.add_saved_query(saved_query)
         self.show = not self.show
         return [
             self.reset(),
-            SidebarState.refresh_saved_filters,
+            SidebarState.refresh_saved_querys,
         ]
 
     def reset(self) -> None:

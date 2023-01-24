@@ -9,10 +9,10 @@ except:
 
 
 from hollys import state
-from hollys.page import query, saved_filter
+from hollys.page import query, saved_query
 
 app = pc.App(state=state.BaseState)
 app.add_page(query.index, path="/")
 app.add_page(query.index, path="/query")
-app.add_page(saved_filter.index, path="/filters")
+app.add_page(saved_query.index, path="/queries")
 app.compile()

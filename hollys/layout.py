@@ -1,7 +1,7 @@
 import pynecone as pc
 
 from hollys import style
-from hollys.state import SavedFilterState, SidebarState
+from hollys.state import SavedQueryState, SidebarState
 
 
 def header():
@@ -24,21 +24,19 @@ def sidebar():
         ),
         pc.box(
             pc.text(
-                "Saved filters".upper(), font_size="xs", weight="300", margin="1rem 0"
+                "Saved Queries".upper(), font_size="xs", weight="300", margin="1rem 0"
             ),
             pc.foreach(
-                SidebarState.saved_filters,
-                lambda saved_filter: pc.box(
+                SidebarState.saved_querys,
+                lambda saved_query: pc.box(
                     pc.link(
                         pc.text(
-                            saved_filter.name_,
+                            saved_query.name_,
                             padding="0 0 0 0.5rem",
-                            on_click=lambda: SavedFilterState.set_by_model(
-                                saved_filter
-                            ),
+                            on_click=lambda: SavedQueryState.set_by_model(saved_query),
                             font_size="sm",
                         ),
-                        href="/filters",
+                        href="/queries",
                     ),
                     padding="0.2rem 0",
                     color="#00000080",

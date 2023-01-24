@@ -207,7 +207,7 @@ def save_modal():
                                 on_change=SaveModalState.set_name,
                             ),
                             pc.form_helper_text(
-                                "This value will appear in the saved filter list"
+                                "This value will appear in the saved query list"
                             ),
                             is_required=True,
                         ),
