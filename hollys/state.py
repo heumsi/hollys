@@ -19,36 +19,31 @@ class SidebarState(BaseState):
 class QueryState(BaseState):
     label: str
     labels: List[str] = []
-    nodes: List[str] = api.get_nodes()
+    is_loaded: bool = False
+
+    @pc.var
+    def nodes(self) -> List[str]:
+        self.is_loaded = False
+        nodes = api.get_nodes(self.labels)
+        self.is_loaded = True
+        return nodes
 
     def add_label(self) -> None:
         if not self.label:
             return
         self.labels += [self.label]
-        # comment(heumsi): This will be deprecated after following issue is resolved
-        # https://github.com/pynecone-io/pynecone/issues/319
-        return self.refresh_nodes()
 
     def remove_label(self, label: str) -> None:
         self.labels = [_label for _label in self.labels if _label != label]
-        # comment(heumsi): This will be deprecated after following issue is resolved
-        # https://github.com/pynecone-io/pynecone/issues/319
-        return self.refresh_nodes()
 
     def reset_label(self) -> None:
         self.label = ""
 
     def reset_labels(self) -> None:
         self.labels = []
-        # comment(heumsi): This will be deprecated after following issue is resolved
-        # https://github.com/pynecone-io/pynecone/issues/319
-        return self.refresh_nodes()
 
     def reset(self):
-        return [self.reset_label(), self.reset_labels(), self.refresh_nodes()]
-
-    def refresh_nodes(self) -> None:
-        self.nodes = api.get_nodes(self.labels)
+        return [self.reset_label(), self.reset_labels()]
 
 
 class SavedFilterState(BaseState):
@@ -57,13 +52,17 @@ class SavedFilterState(BaseState):
     description_: str = ""
     id: str = ""
     nodes: List[str] = api.get_nodes()
+    is_loaded: bool = False
 
     def set_by_model(self, saved_filter) -> None:
+        self.reset()
         self.id = saved_filter["id"]
         self.name_ = saved_filter["name_"]
         self.description_ = saved_filter["description_"]
         self.labels = saved_filter["labels"]
+        self.is_loaded = False
         self.nodes = api.get_nodes(self.labels)
+        self.is_loaded = True
 
     def delete(self):
         api.remove_saved_filter(self.id)

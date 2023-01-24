@@ -66,7 +66,10 @@ def content():
             pc.foreach(
                 SavedFilterState.nodes,
                 lambda node: pc.box(
-                    pc.text(node),
+                    pc.skeleton(
+                        pc.text(node),
+                        is_loaded=SavedFilterState.is_loaded,
+                    ),
                     width="fit-content",
                     margin="0.5rem",
                     padding="0.5rem",

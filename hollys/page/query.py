@@ -97,7 +97,10 @@ def content():
             pc.foreach(
                 QueryState.nodes,
                 lambda node: pc.box(
-                    pc.text(node),
+                    pc.skeleton(
+                        pc.text(node),
+                        is_loaded=QueryState.is_loaded,
+                    ),
                     width="fit-content",
                     margin="0.5rem",
                     padding="0.5rem",
