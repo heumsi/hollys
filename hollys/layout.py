@@ -17,21 +17,26 @@ def header():
 def sidebar():
     return pc.box(
         pc.box(
-            pc.link(pc.text("Query", font_size="1em"), href="/query"),
+            pc.link(
+                pc.text("Query", font_size="md"),
+                href="/query",
+            ),
         ),
         pc.box(
-            pc.text("Saved filters", font_size="xs", margin="0 0 1rem 0"),
+            pc.text(
+                "Saved filters".upper(), font_size="xs", weight="300", margin="1rem 0"
+            ),
             pc.foreach(
                 SidebarState.saved_filters,
                 lambda saved_filter: pc.box(
                     pc.link(
                         pc.text(
                             saved_filter.name_,
-                            padding="0 0 0 1rem",
+                            padding="0 0 0 0.5rem",
                             on_click=lambda: SavedFilterState.set_by_model(
                                 saved_filter
                             ),
-                            font_size="1rem",
+                            font_size="sm",
                         ),
                         href="/filters",
                     ),
