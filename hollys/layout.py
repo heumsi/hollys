@@ -1,12 +1,23 @@
 import pynecone as pc
 
 from hollys import style
-from hollys.state import SavedQueryState, SidebarState
+from hollys.state import GlobalState, SavedQueryState, SidebarState
 
 
 def header():
     return pc.box(
-        pc.heading("Hollys", size="lg"),
+        pc.flex(
+            pc.heading("Hollys", size="lg"),
+            pc.badge(
+                GlobalState.version,
+                margin_left="0.5rem",
+                font_weight="400",
+                style={
+                    "text-transform": "none",
+                },
+            ),
+            align_items="flex-start",
+        ),
         width="100%",
         padding="1rem 5rem",
         bg=style.Color.navbar_bg,

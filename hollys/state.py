@@ -1,3 +1,4 @@
+import tomllib
 from typing import List
 
 import pynecone as pc
@@ -7,6 +8,15 @@ from hollys import api, model
 
 class BaseState(pc.State):
     ...
+
+
+def get_version() -> str:
+    version = tomllib.load(open("pyproject.toml", "rb"))["tool"]["poetry"]["version"]
+    return version
+
+
+class GlobalState(BaseState):
+    version: str = get_version()
 
 
 class SidebarState(BaseState):

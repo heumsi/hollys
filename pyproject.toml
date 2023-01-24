@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "hollys"
-version = "0.1.0"
+version = "v0.1.0"
 description = ""
 authors = ["heumsi"]
 readme = "README.md"
@@ -9,6 +9,7 @@ readme = "README.md"
 python = "^3.11"
 pynecone-io = "^0.1.13"
 kubernetes = "^25.3.0"
+tomli = "^2.0.1"
 
 
 [tool.poetry.group.dev.dependencies]
