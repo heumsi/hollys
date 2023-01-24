@@ -44,14 +44,20 @@ def content():
                 pc.box(
                     pc.foreach(
                         SavedFilterState.labels,
-                        lambda label: pc.box(
-                            pc.text(label),
-                            width="fit-content",
-                            margin="0.5rem 0.5rem 0.5rem 0",
-                            padding="0.5rem",
+                        lambda label: pc.hstack(
+                            pc.box(
+                                pc.box(
+                                    pc.text(label),
+                                    width="fit-content",
+                                    margin="0.5rem 0.5rem 0.5rem 0",
+                                    padding="0.5rem",
+                                    display="inline-block",
+                                    bg=get_color("gray", 50),
+                                    font_size="sm",
+                                ),
+                                margin_right="0.5rem",
+                            ),
                             display="inline-block",
-                            bg=get_color("gray", 50),
-                            font_size="sm",
                         ),
                     ),
                     min_height="50px",
@@ -68,14 +74,20 @@ def content():
                 pc.box(
                     pc.foreach(
                         SavedFilterState.taints,
-                        lambda taint: pc.box(
-                            pc.text(taint),
-                            width="fit-content",
-                            margin="0.5rem 0.5rem 0.5rem 0",
-                            padding="0.5rem",
+                        lambda taint: pc.hstack(
+                            pc.box(
+                                pc.box(
+                                    pc.text(taint),
+                                    width="fit-content",
+                                    margin="0.5rem 0.5rem 0.5rem 0",
+                                    padding="0.5rem",
+                                    display="inline-block",
+                                    bg=get_color("gray", 50),
+                                    font_size="sm",
+                                ),
+                                margin_right="0.5rem",
+                            ),
                             display="inline-block",
-                            bg=get_color("gray", 50),
-                            font_size="sm",
                         ),
                     ),
                     min_height="50px",
