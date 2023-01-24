@@ -14,6 +14,7 @@ class SavedFilter(pc.Model, table=True):
     name_: str = Field(sa_column=Column("name", String))
     description_: str = Field(sa_column=Column("description", String, default=""))
     labels: List[str] = Field(sa_column=Column(JSON))
+    taints: List[str] = Field(sa_column=Column(JSON))
     id: str = Field(default_factory=_get_id, primary_key=True)
 
 

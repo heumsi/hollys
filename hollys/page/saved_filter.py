@@ -54,6 +54,30 @@ def content():
             min_height="50px",
             padding="1rem",
         ),
+        pc.heading("Taints", size="md", padding="1rem 0"),
+        pc.text(
+            SavedFilterState.taints.length()
+            + " items",  # comment(heumsi): It seems that f-string is not supported yet.
+            margin_top="-0.5rem",
+            font_size="xs",
+            color=get_color("gray", 500),
+        ),
+        pc.box(
+            pc.foreach(
+                SavedFilterState.taints,
+                lambda taint: pc.box(
+                    pc.text(taint),
+                    width="fit-content",
+                    margin="0.5rem",
+                    padding="0.5rem",
+                    display="inline-block",
+                    bg=get_color("gray", 50),
+                    font_size="sm",
+                ),
+            ),
+            min_height="50px",
+            padding="1rem",
+        ),
         pc.heading("Nodes", size="md", padding="1rem 0"),
         pc.text(
             SavedFilterState.nodes.length()

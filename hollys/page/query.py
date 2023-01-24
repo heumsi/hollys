@@ -1,5 +1,3 @@
-from typing import List
-
 import pynecone as pc
 
 from hollys.layout import page
@@ -44,7 +42,11 @@ def content():
             pc.button(
                 pc.icon(tag="AddIcon"),
                 color_scheme="green",
-                on_click=QueryState.add_label,
+                on_click=[
+                    QueryState.add_label,
+                    QueryState.reset_label,
+                    QueryState.refresh_nodes,
+                ],
             ),
         ),
         pc.text(
@@ -85,6 +87,57 @@ def content():
             min_height="50px",
             padding="1rem",
         ),
+        pc.heading("Taints", size="md", padding="1rem 0"),
+        pc.hstack(
+            pc.input(value=QueryState.taint, on_change=QueryState.set_taint),
+            pc.button(
+                pc.icon(tag="AddIcon"),
+                color_scheme="green",
+                on_click=[
+                    QueryState.add_taint,
+                    QueryState.reset_taint,
+                    QueryState.refresh_nodes,
+                ],
+            ),
+        ),
+        pc.text(
+            # comment(heumsi): It seems that f-string is not supported yet.
+            QueryState.taints.length() + " items",
+            margin_top="0.5rem",
+            font_size="xs",
+            color=get_color("gray", 500),
+        ),
+        pc.box(
+            pc.foreach(
+                QueryState.taints,
+                lambda taint: pc.hstack(
+                    pc.box(
+                        pc.text(taint),
+                        width="fit-content",
+                        margin="0.5rem",
+                        margin_right="0rem",
+                        padding="0.5rem",
+                        display="inline-block",
+                        bg=get_color("gray", 50),
+                        font_size="sm",
+                    ),
+                    pc.icon(
+                        tag="CloseIcon",
+                        margin="0",
+                        pading="0",
+                        color=get_color("gray", 300),
+                        font_size="0.5rem",
+                        _hover={
+                            "color": "#000000",
+                            "cursor": "pointer",
+                        },
+                        on_click=lambda: QueryState.remove_taint(taint),
+                    ),
+                ),
+            ),
+            min_height="50px",
+            padding="1rem",
+        ),
         pc.heading("Nodes", size="md", padding="1rem 0"),
         pc.text(
             QueryState.nodes.length()
@@ -112,14 +165,14 @@ def content():
             min_height="50px",
             padding="1rem",
         ),
-        save_modal(QueryState.labels),
+        save_modal(),
         width="80%",
         height="100%",
         padding="1rem",
     )
 
 
-def save_modal(labels: List[str]):
+def save_modal():
     return pc.modal(
         pc.modal_overlay(
             pc.modal_content(
@@ -158,7 +211,9 @@ def save_modal(labels: List[str]):
                         pc.button(
                             "Done",
                             color_scheme="green",
-                            on_click=lambda: SaveModalState.done(labels),
+                            on_click=lambda: SaveModalState.done(
+                                QueryState.labels, QueryState.taints
+                            ),
                         ),
                         pc.button("Cancel", on_click=SaveModalState.cancel),
                     ),
