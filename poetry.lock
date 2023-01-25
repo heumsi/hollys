@@ -385,6 +385,18 @@ python-versions = ">=3.6"
 plugins = ["importlib-metadata"]
 
 [[package]]
+name = "PyMySQL"
+version = "1.0.2"
+description = "Pure Python MySQL Driver"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.extras]
+ed25519 = ["PyNaCl (>=1.4.0)"]
+rsa = ["cryptography"]
+
+[[package]]
 name = "pynecone-io"
 version = "0.1.13"
 description = "The easiest way to build web apps."
@@ -727,7 +739,7 @@ python-versions = ">=3.7"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.11"
-content-hash = "e465df883bc783e37f4c2794e15ce3e394af0904409274033c47186d770623eb"
+content-hash = "bfebe969adee1572d204cf44a45338a425b253cbcc28a7211968c95b323ca97c"
 
 [metadata.files]
 anyio = [
@@ -1065,6 +1077,10 @@ pydantic = [
 Pygments = [
     {file = "Pygments-2.14.0-py3-none-any.whl", hash = "sha256:fa7bd7bd2771287c0de303af8bfdfc731f51bd2c6a47ab69d117138893b82717"},
     {file = "Pygments-2.14.0.tar.gz", hash = "sha256:b3ed06a9e8ac9a9aae5a6f5dbe78a8a58655d17b43b93c078f094ddc476ae297"},
+]
+PyMySQL = [
+    {file = "PyMySQL-1.0.2-py3-none-any.whl", hash = "sha256:41fc3a0c5013d5f039639442321185532e3e2c8924687abe6537de157d403641"},
+    {file = "PyMySQL-1.0.2.tar.gz", hash = "sha256:816927a350f38d56072aeca5dfb10221fe1dc653745853d30a216637f5d7ad36"},
 ]
 pynecone-io = [
     {file = "pynecone_io-0.1.13-py3-none-any.whl", hash = "sha256:3e3b8f0be4ba9356eb2e49c0b1fd0f36a93164c548916f5095c605b7afe6ca2b"},

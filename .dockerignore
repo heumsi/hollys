@@ -1,0 +1,8 @@
+__pycache__
+*.pyo
+*.pyd
+.venv/
+.vscode/
+.idea/
+.web/
+chart/
