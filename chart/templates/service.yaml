@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "hollys.fullname" . }}
+  labels:
+    {{- include "hollys.labels" . | nindent 4 }}
+spec:
+  type: ClusterIP
+  ports:
+    - port: 3000
+      targetPort: 3000
+      protocol: TCP
+      name: ui
+    - port: 8000
+      targetPort: 8000
+      protocol: TCP
+      name: api
+  selector:
+    {{- include "hollys.selectorLabels" . | nindent 4 }}

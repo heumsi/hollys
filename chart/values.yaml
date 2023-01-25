@@ -1,0 +1,59 @@
+deployment:
+  replicaCount: 1
+
+  image:
+    repository: heumsi/hollys
+    pullPolicy: Always
+    tag: test3
+
+  podAnnotations: {}
+
+  podSecurityContext: {}
+    # fsGroup: 2000
+
+  securityContext: {}
+    # capabilities:
+    #   drop:
+    #   - ALL
+    # readOnlyRootFilesystem: true
+    # runAsNonRoot: true
+    # runAsUser: 1000
+
+  resources: {}
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 128Mi
+
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+
+ingress:
+  className: "nginx"
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  host:
+    ui: your_domain.com
+    api: api.your_domain.com
+
+
+mysql:
+  global:
+    storageClass: "d8d-dev-sc"
+  primary:
+    resources: {}
+#      limits:
+#        cpu: 100m
+#        memory: 512Mi
+#      requests:
+#        cpu: 100m
+#        memory: 128Mi
+  auth:
+    username: hollys
+    password: hollys
+    database: hollys

@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "hollys.fullname" . }}
+  labels:
+    {{- include "hollys.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.deployment.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "hollys.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.deployment.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "hollys.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.deployment.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "hollys.fullname" . }}
+      securityContext:
+        {{- toYaml .Values.deployment.podSecurityContext | nindent 8 }}
+      initContainers:
+        - name: wait-for-mysql
+          image: bitnami/kubectl:1.22
+          command: [ "/bin/bash", "-c" ]
+          args:
+            - kubectl wait --for=condition=ready pod --selector app.kubernetes.io/name=mysql
+      containers:
+        - name: hollys
+          securityContext:
+            {{- toYaml .Values.deployment.securityContext | nindent 12 }}
+          image: "{{ .Values.deployment.image.repository }}:{{ .Values.deployment.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.deployment.image.pullPolicy }}
+          command: ["sleep", "300000"]
+          env:
+            - name: DB_URL
+              value: 'mysql+pymysql://{{ .Values.mysql.auth.username }}:{{ .Values.mysql.auth.password }}@{{ include "hollys.fullname" . }}-mysql.{{ .Release.Namespace }}.svc.cluster.local/{{ .Values.mysql.auth.database }}?charset=utf8mb4'
+            - name: API_URL
+              value: ws://{{ .Values.ingress.host.api }}
+          ports:
+            - name: ui
+              containerPort: 3000
+              protocol: TCP
+            - name: api
+              containerPort: 8000
+              protocol: TCP
+#          livenessProbe:
+#            httpGet:
+#              path: /
+#              port: http
+#          readinessProbe:
+#            httpGet:
+#              path: /
+#              port: http
+          resources:
+            {{- toYaml .Values.deployment.resources | nindent 12 }}
+      {{- with .Values.deployment.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.deployment.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.deployment.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
