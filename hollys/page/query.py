@@ -41,7 +41,11 @@ def content():
             pc.box(
                 pc.heading("Labels", size="sm", padding="1rem 0"),
                 pc.hstack(
-                    pc.input(value=QueryState.label, on_change=QueryState.set_label),
+                    pc.input(
+                        placeholder="key=value",
+                        value=QueryState.label,
+                        on_change=QueryState.set_label,
+                    ),
                     pc.button(
                         pc.icon(tag="AddIcon"),
                         color_scheme="green",
@@ -96,7 +100,11 @@ def content():
                 ),
                 pc.heading("Taints", size="sm", padding="1rem 0"),
                 pc.hstack(
-                    pc.input(value=QueryState.taint, on_change=QueryState.set_taint),
+                    pc.input(
+                        placeholder="key(=value):effect",
+                        value=QueryState.taint,
+                        on_change=QueryState.set_taint,
+                    ),
                     pc.button(
                         pc.icon(tag="AddIcon"),
                         color_scheme="green",
