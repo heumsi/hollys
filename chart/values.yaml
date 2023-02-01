@@ -43,8 +43,9 @@ ingress:
 
 
 mysql:
+  enabled: true
   global:
-    storageClass: "d8d-dev-sc"
+    storageClass: ""
   primary:
     resources: {}
 #      limits:
@@ -53,6 +54,16 @@ mysql:
 #      requests:
 #        cpu: 100m
 #        memory: 128Mi
+  auth:
+    username: hollys
+    password: hollys
+    database: hollys
+
+
+externalDatabase:
+  enabled: false
+  host: "your_external_database_host"
+  port: "your_external_database_port"
   auth:
     username: hollys
     password: hollys
