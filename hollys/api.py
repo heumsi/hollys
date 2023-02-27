@@ -2,6 +2,7 @@ from typing import List, Optional
 
 import pynecone as pc
 from kubernetes import client
+from sqlmodel import select
 
 from hollys import model
 
@@ -33,6 +34,16 @@ def get_nodes(
 def list_saved_query() -> List[model.SavedQuery]:
     with pc.session() as session:
         return session.query(model.SavedQuery).all()
+
+
+# comment(heumsi): Not used yet. but will be used after following issue is resolved.
+# https://github.com/pynecone-io/pynecone/issues/609
+# def get_saved_query(name: str) -> Optional[model.SavedQuery]:
+#     with pc.session() as session:
+#         statement = select(model.SavedQuery).where(model.SavedQuery.name_ == name)
+#         results = session.exec(statement)
+#         saved_query = results.first()
+#         return saved_query
 
 
 def add_saved_query(saved_query: model.SavedQuery) -> None:

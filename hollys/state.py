@@ -20,10 +20,10 @@ class GlobalState(BaseState):
 
 
 class SidebarState(BaseState):
-    saved_querys: List[model.SavedQuery] = api.list_saved_query()
+    saved_queries: List[model.SavedQuery] = api.list_saved_query()
 
     def refresh_saved_queries(self) -> None:
-        self.saved_querys = api.list_saved_query()
+        self.saved_queries = api.list_saved_query()
 
 
 class QueryState(BaseState):
@@ -89,17 +89,36 @@ class SavedQueryState(BaseState):
     name_: str = ""
     description_: str = ""
     id: str = ""
-    is_loaded: bool = False
+    is_loaded: bool = True
     nodes: List[str] = []
 
-    def set_by_model(self, saved_query):
-        self.reset()
+    # comment(heumsi): Not used yet. but will be used after following issue is resolved.
+    # https://github.com/pynecone-io/pynecone/issues/609
+    # @pc.var
+    # def saved_query_name(self):
+    #     saved_query_name = self.get_query_params().get("name", "no saved query name")
+    #     print(saved_query_name)
+    #     return saved_query_name
+
+    # comment(heumsi): Not used yet. but will be used after following issue is resolved.
+    # https://github.com/pynecone-io/pynecone/issues/609
+    # def init(self):
+    #     saved_query = api.get_saved_query(self.saved_query_name)
+    #     if not saved_query:
+    #         ...  # TODO(heumsi): If saved query is None, Print 404 page.
+    #     self.id = saved_query.id
+    #     self.name_ = saved_query.name_
+    #     self.description_ = saved_query.description_
+    #     self.labels = saved_query.labels
+    #     self.taints = saved_query.taints
+    #     return self.refresh_nodes
+
+    def set_by_model(self, saved_query: model.SavedQuery):
         self.id = saved_query["id"]
         self.name_ = saved_query["name_"]
         self.description_ = saved_query["description_"]
         self.labels = saved_query["labels"]
         self.taints = saved_query["taints"]
-        return self.refresh_nodes
 
     def refresh_nodes(self) -> None:
         self.is_loaded = False
@@ -108,7 +127,7 @@ class SavedQueryState(BaseState):
 
     def delete(self):
         api.remove_saved_query(self.id)
-        return [SidebarState.refresh_saved_querys, pc.redirect("/")]
+        return [SidebarState.refresh_saved_queries, pc.redirect("/")]
 
 
 class SaveModalState(BaseState):
@@ -128,7 +147,7 @@ class SaveModalState(BaseState):
         self.show = not self.show
         return [
             self.reset(),
-            SidebarState.refresh_saved_querys,
+            SidebarState.refresh_saved_queries,
         ]
 
     def reset(self) -> None:

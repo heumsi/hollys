@@ -38,16 +38,22 @@ def sidebar():
                 "Saved Queries".upper(), font_size="xs", weight="300", margin="1rem 0"
             ),
             pc.foreach(
-                SidebarState.saved_querys,
+                SidebarState.saved_queries,
                 lambda saved_query: pc.box(
                     pc.link(
                         pc.text(
                             saved_query.name_,
                             padding="0 0 0 0.5rem",
-                            on_click=lambda: SavedQueryState.set_by_model(saved_query),
+                            # comment(heumsi): Not used yet. but will be used after following issue is resolved.
+                            # https://github.com/pynecone-io/pynecone/issues/609
+                            # on_click=lambda: SavedQueryState.init,
+                            on_click=[
+                                lambda: SavedQueryState.set_by_model(saved_query),
+                                SavedQueryState.refresh_nodes,
+                            ],
                             font_size="sm",
                         ),
-                        href="/queries",
+                        href="/queries/" + saved_query.name_,
                     ),
                     padding="0.2rem 0",
                     color="#00000080",
