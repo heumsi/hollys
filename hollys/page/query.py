@@ -47,7 +47,7 @@ def content():
                         on_change=QueryState.set_label,
                     ),
                     pc.button(
-                        pc.icon(tag="AddIcon"),
+                        pc.icon(tag="add"),
                         color_scheme="green",
                         on_click=[
                             QueryState.add_label,
@@ -78,7 +78,7 @@ def content():
                                     font_size="sm",
                                 ),
                                 pc.icon(
-                                    tag="CloseIcon",
+                                    tag="close",
                                     margin="0",
                                     pading="0",
                                     display="inline-block",
@@ -106,7 +106,7 @@ def content():
                         on_change=QueryState.set_taint,
                     ),
                     pc.button(
-                        pc.icon(tag="AddIcon"),
+                        pc.icon(tag="add"),
                         color_scheme="green",
                         on_click=[
                             QueryState.add_taint,
@@ -137,7 +137,7 @@ def content():
                                     font_size="sm",
                                 ),
                                 pc.icon(
-                                    tag="CloseIcon",
+                                    tag="close",
                                     margin="0",
                                     pading="0",
                                     display="inline-block",

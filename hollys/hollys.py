@@ -12,7 +12,7 @@ from hollys import state
 from hollys.page import query, saved_query
 
 app = pc.App(state=state.BaseState)
-app.add_page(query.index, path="/")
-app.add_page(query.index, path="/query")
-app.add_page(saved_query.index, path="/queries")
+app.add_page(query.index, route="/")
+app.add_page(query.index, route="/query")
+app.add_page(saved_query.index, route="/queries")
 app.compile()
