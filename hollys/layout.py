@@ -48,8 +48,10 @@ def sidebar():
                             # https://github.com/pynecone-io/pynecone/issues/609
                             # on_click=lambda: SavedQueryState.init,
                             on_click=[
+                                lambda: SavedQueryState.set_is_loaded(False),
                                 lambda: SavedQueryState.set_by_model(saved_query),
                                 SavedQueryState.refresh_nodes,
+                                lambda: SavedQueryState.set_is_loaded(True),
                             ],
                             font_size="sm",
                         ),

@@ -108,19 +108,23 @@ def content():
                     color=get_color("gray", 500),
                 ),
                 pc.box(
-                    pc.foreach(
-                        SavedQueryState.nodes,
-                        lambda node: pc.box(
-                            pc.skeleton(
+                    pc.cond(
+                        SavedQueryState.is_loaded,
+                        pc.foreach(
+                            SavedQueryState.nodes,
+                            lambda node: pc.box(
                                 pc.text(node),
-                                is_loaded=SavedQueryState.is_loaded,
+                                width="fit-content",
+                                margin="0.5rem 0.5rem 0.5rem 0",
+                                padding="0.5rem",
+                                display="inline-block",
+                                bg=get_color("gray", 50),
+                                font_size="sm",
                             ),
-                            width="fit-content",
-                            margin="0.5rem 0.5rem 0.5rem 0",
-                            padding="0.5rem",
-                            display="inline-block",
-                            bg=get_color("gray", 50),
-                            font_size="sm",
+                        ),
+                        pc.center(
+                            pc.spinner(size="lg"),
+                            margin_top="3rem",
                         ),
                     ),
                     min_height="50px",

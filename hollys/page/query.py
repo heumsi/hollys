@@ -52,7 +52,9 @@ def content():
                         on_click=[
                             QueryState.add_label,
                             QueryState.reset_label,
+                            lambda: QueryState.set_is_loaded(False),
                             QueryState.refresh_nodes,
+                            lambda: QueryState.set_is_loaded(True),
                         ],
                     ),
                 ),
@@ -88,7 +90,12 @@ def content():
                                         "color": "#000000",
                                         "cursor": "pointer",
                                     },
-                                    on_click=lambda: QueryState.remove_label(label),
+                                    on_click=[
+                                        lambda: QueryState.remove_label(label),
+                                        lambda: QueryState.set_is_loaded(False),
+                                        QueryState.refresh_nodes,
+                                        lambda: QueryState.set_is_loaded(True),
+                                    ],
                                 ),
                                 margin_right="0.5rem",
                             ),
@@ -111,7 +118,9 @@ def content():
                         on_click=[
                             QueryState.add_taint,
                             QueryState.reset_taint,
+                            lambda: QueryState.set_is_loaded(False),
                             QueryState.refresh_nodes,
+                            lambda: QueryState.set_is_loaded(True),
                         ],
                     ),
                 ),
@@ -147,7 +156,12 @@ def content():
                                         "color": "#000000",
                                         "cursor": "pointer",
                                     },
-                                    on_click=lambda: QueryState.remove_taint(taint),
+                                    on_click=[
+                                        lambda: QueryState.remove_taint(taint),
+                                        lambda: QueryState.set_is_loaded(False),
+                                        QueryState.refresh_nodes,
+                                        lambda: QueryState.set_is_loaded(True),
+                                    ],
                                 ),
                                 margin_right="0.5rem",
                             ),
@@ -172,19 +186,23 @@ def content():
                     color=get_color("gray", 500),
                 ),
                 pc.box(
-                    pc.foreach(
-                        QueryState.nodes,
-                        lambda node: pc.box(
-                            pc.skeleton(
+                    pc.cond(
+                        QueryState.is_loaded,
+                        pc.foreach(
+                            QueryState.nodes,
+                            lambda node: pc.box(
                                 pc.text(node),
-                                is_loaded=QueryState.is_loaded,
+                                width="fit-content",
+                                margin="0.5rem 0.5rem 0.5rem 0",
+                                padding="0.5rem",
+                                display="inline-block",
+                                bg=get_color("gray", 50),
+                                font_size="sm",
                             ),
-                            width="fit-content",
-                            margin="0.5rem 0.5rem 0.5rem 0",
-                            padding="0.5rem",
-                            display="inline-block",
-                            bg=get_color("gray", 50),
-                            font_size="sm",
+                        ),
+                        pc.center(
+                            pc.spinner(size="lg"),
+                            margin_top="3rem",
                         ),
                     ),
                     min_height="50px",

@@ -34,6 +34,13 @@ class QueryState(BaseState):
     nodes: List[str] = []
     is_loaded: bool = True
 
+    def init(self):
+        # comment(heumsi): these codes should be modified after following issue resolved.
+        # https://github.com/pynecone-io/pynecone/issues/610
+        self.is_loaded = False
+        self.nodes = api.get_nodes(self.labels, self.taints)
+        self.is_loaded = True
+
     def add_label(self):
         if not self.label:
             return
@@ -41,9 +48,6 @@ class QueryState(BaseState):
 
     def remove_label(self, label: str):
         self.labels = [_label for _label in self.labels if _label != label]
-        # TODO(heumsi): This will be moved to page after following issue is resolved.
-        # https://github.com/pynecone-io/pynecone/issues/319
-        return [self.refresh_nodes]
 
     def add_taint(self):
         if not self.taint:
@@ -52,9 +56,6 @@ class QueryState(BaseState):
 
     def remove_taint(self, taint: str):
         self.taints = [_taint for _taint in self.taints if _taint != taint]
-        # TODO(heumsi): This will be moved to page after following issue is resolved.
-        # https://github.com/pynecone-io/pynecone/issues/319
-        return [self.refresh_nodes]
 
     def reset(self):
         return [
@@ -62,13 +63,13 @@ class QueryState(BaseState):
             self.reset_labels,
             self.reset_taint,
             self.reset_taints,
+            lambda: QueryState.set_is_loaded(False),
             self.refresh_nodes,
+            lambda: QueryState.set_is_loaded(True),
         ]
 
     def refresh_nodes(self) -> None:
-        self.is_loaded = False
         self.nodes = api.get_nodes(self.labels, self.taints)
-        self.is_loaded = True
 
     def reset_label(self):
         self.label = ""
@@ -89,7 +90,7 @@ class SavedQueryState(BaseState):
     name_: str = ""
     description_: str = ""
     id: str = ""
-    is_loaded: bool = True
+    is_loaded: bool = False
     nodes: List[str] = []
 
     # comment(heumsi): Not used yet. but will be used after following issue is resolved.
@@ -121,9 +122,7 @@ class SavedQueryState(BaseState):
         self.taints = saved_query["taints"]
 
     def refresh_nodes(self) -> None:
-        self.is_loaded = False
         self.nodes = api.get_nodes(self.labels, self.taints)
-        self.is_loaded = True
 
     def delete(self):
         api.remove_saved_query(self.id)
