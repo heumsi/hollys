@@ -22,7 +22,7 @@ class GlobalState(BaseState):
 class SidebarState(BaseState):
     saved_querys: List[model.SavedQuery] = api.list_saved_query()
 
-    def refresh_saved_querys(self) -> None:
+    def refresh_saved_queries(self) -> None:
         self.saved_querys = api.list_saved_query()
 
 
@@ -31,7 +31,7 @@ class QueryState(BaseState):
     labels: List[str] = []
     taint: str
     taints: List[str] = []
-    nodes: List[str] = api.get_nodes()
+    nodes: List[str] = []
     is_loaded: bool = True
 
     def add_label(self):
