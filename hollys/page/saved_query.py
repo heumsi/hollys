@@ -1,7 +1,7 @@
 import pynecone as pc
 
 from hollys.layout import page
-from hollys.state import SavedQueryState
+from hollys.state import SavedQueryState, SnippetModalState
 from hollys.style import get_color
 
 
@@ -10,15 +10,28 @@ def content():
         pc.flex(
             pc.heading(SavedQueryState.name_, size="lg"),
             pc.spacer(),
-            pc.text(
-                "Delete",
-                font_size="sm",
-                color=get_color("gray", 500),
-                _hover={
-                    "color": "#000000",
-                    "cursor": "pointer",
-                },
-                on_click=SavedQueryState.delete,
+            pc.hstack(
+                pc.text(
+                    "Snippet",
+                    font_size="sm",
+                    color=get_color("gray", 500),
+                    _hover={
+                        "color": "#000000",
+                        "cursor": "pointer",
+                    },
+                    on_click=SnippetModalState.toggle_show,
+                ),
+                pc.text(
+                    "Delete",
+                    font_size="sm",
+                    color=get_color("gray", 500),
+                    _hover={
+                        "color": "#000000",
+                        "cursor": "pointer",
+                    },
+                    on_click=SavedQueryState.delete,
+                ),
+                spacing="1rem",
             ),
             margin="0 0 1rem 0",
             align_items="flex-end",
@@ -133,9 +146,92 @@ def content():
                 padding_left="1rem",
             ),
         ),
+        snippet_modal(),
         width="80%",
         height="100%",
         padding="1rem",
+    )
+
+
+def snippet_modal():
+    return pc.modal(
+        pc.modal_overlay(
+            pc.modal_content(
+                pc.modal_header("Snippet"),
+                pc.modal_body(
+                    pc.box(
+                        pc.box(
+                            pc.heading("For Nodes", size="sm", padding="0.5rem 0"),
+                            pc.text(
+                                "If you want the node to be included in this query, run kubectl taints and labels command.",
+                                padding="0.5rem 0",
+                            ),
+                            pc.heading(
+                                "Labels",
+                                size="xs",
+                                padding="0.5rem 0",
+                            ),
+                            pc.cond(
+                                SavedQueryState.labels_empty,
+                                pc.markdown("```\nThere is nothing to run."),
+                                pc.markdown(
+                                    SavedQueryState.labels_as_kubectl,
+                                    padding="0.5rem 0",
+                                ),
+                            ),
+                            pc.heading(
+                                "Taints",
+                                size="xs",
+                                padding="0.5rem 0",
+                            ),
+                            pc.cond(
+                                SavedQueryState.taints_empty,
+                                pc.markdown("```\nThere is nothing to run."),
+                                pc.markdown(
+                                    SavedQueryState.taints_as_kubectl,
+                                    padding="0.5rem 0",
+                                ),
+                            ),
+                        ),
+                        pc.box(
+                            pc.heading("For Pods", size="sm", padding="0.5rem 0"),
+                            pc.text(
+                                "If you want pods to be scheduled in these nodes, add following in pods' spec",
+                                padding="0.5rem 0",
+                            ),
+                            pc.heading(
+                                "Node affinity",
+                                size="xs",
+                                padding="0.5rem 0",
+                            ),
+                            pc.cond(
+                                SavedQueryState.labels_empty,
+                                pc.markdown("```\nThere is nothing to add."),
+                                pc.markdown(SavedQueryState.labels_as_node_affinity),
+                            ),
+                            pc.heading(
+                                "Tolerations",
+                                size="xs",
+                                padding="0.5rem 0",
+                            ),
+                            pc.cond(
+                                SavedQueryState.taints_empty,
+                                pc.markdown("```\nThere is nothing to add."),
+                                pc.markdown(SavedQueryState.taints_as_tolerations),
+                            ),
+                            padding="2rem 0 0 0",
+                        ),
+                        spacing="1rem",
+                    ),
+                ),
+                pc.modal_footer(
+                    pc.button("Close", on_click=SnippetModalState.toggle_show)
+                ),
+            ),
+        ),
+        size="2xl",
+        is_open=SnippetModalState.show,
+        close_on_esc=True,
     )
 
 

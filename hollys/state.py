@@ -128,6 +128,90 @@ class SavedQueryState(BaseState):
         api.remove_saved_query(self.id)
         return [SidebarState.refresh_saved_queries, pc.redirect("/")]
 
+    @pc.var
+    def labels_empty(self) -> bool:
+        return len(self.labels) == 0
+
+    @pc.var
+    def taints_empty(self) -> bool:
+        return len(self.taints) == 0
+
+    @pc.var
+    def labels_as_kubectl(self) -> str:
+        labels = []
+        for label in self.labels:
+            if "=" in label:
+                labels.append(label)
+            else:
+                labels.append(f"{label}=''")
+        labels_as_str = " \\\n".join(labels)
+        return (
+            """```
+kubectl label nodes <your-node-name> \\\n"""
+            + labels_as_str
+        )
+
+    @pc.var
+    def taints_as_kubectl(self) -> str:
+        taints_as_str = " \\\n".join(self.taints)
+        return (
+            """```
+kubectl taint nodes <your-node-name> \\\n"""
+            + taints_as_str
+        )
+
+    @pc.var
+    def labels_as_node_affinity(self) -> str:
+        expressions_as_str = ""
+        for label in self.labels:
+            if "=" in label:
+                key, value = label.split("=")
+                expression_as_str = f"""
+        - key: {key}
+          operator: "In"
+          values:
+          - {value} """
+            else:
+                key = label
+                expression_as_str = f"""
+        - key: {key}
+          operator: "Exists" """
+            expressions_as_str += expression_as_str
+        return (
+            """```
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+      - matchExpressions: """
+            + expressions_as_str
+        )
+
+    @pc.var
+    def taints_as_tolerations(self) -> str:
+        tolerations_as_str = ""
+        for taint in self.taints:
+            if "=" in taint:
+                key, value_with_effect = taint.split("=")
+                value, effect = value_with_effect.split(":")
+                toleration_as_str = f"""
+- key: {key}
+  operator: "Equal"
+  values: {value}
+  effect: {effect}"""
+            else:
+                key, effect = taint.split(":")
+                toleration_as_str = f"""
+- key: {key}
+  operator: "Exists"
+  effect: {effect}"""
+            tolerations_as_str += toleration_as_str
+        return (
+            """```
+tolerations: """
+            + tolerations_as_str
+        )
+
 
 class SaveModalState(BaseState):
     show: bool = False
@@ -152,6 +236,13 @@ class SaveModalState(BaseState):
     def reset(self) -> None:
         self.name = ""
         self.description = ""
+
+    def toggle_show(self) -> None:
+        self.show = not self.show
+
+
+class SnippetModalState(BaseState):
+    show: bool = False
 
     def toggle_show(self) -> None:
         self.show = not self.show
