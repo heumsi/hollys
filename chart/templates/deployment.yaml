@@ -42,6 +42,8 @@ spec:
               value: 'mysql+pymysql://{{ .Values.mysql.auth.username }}:{{ .Values.mysql.auth.password }}@{{ include "hollys.fullname" . }}-mysql.{{ .Release.Namespace }}.svc.cluster.local/{{ .Values.mysql.auth.database }}?charset=utf8mb4'
             - name: API_URL
               value: ws://{{ .Values.ingress.host.api }}
+            - name: BUN_PATH
+              value: "/app/.bun/bin/bun"
           ports:
             - name: ui
               containerPort: 3000
