@@ -57,17 +57,6 @@ class QueryState(BaseState):
     def remove_taint(self, taint: str):
         self.taints = [_taint for _taint in self.taints if _taint != taint]
 
-    def reset(self):
-        return [
-            self.reset_label,
-            self.reset_labels,
-            self.reset_taint,
-            self.reset_taints,
-            lambda: QueryState.set_is_loaded(False),
-            self.refresh_nodes,
-            lambda: QueryState.set_is_loaded(True),
-        ]
-
     def refresh_nodes(self) -> None:
         self.nodes = api.get_nodes(self.labels, self.taints)
 
