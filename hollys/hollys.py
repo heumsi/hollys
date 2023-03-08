@@ -18,6 +18,8 @@ app.add_page(
     query.index,
     route="/",
     on_load=[
+        # comment(heumsi): This does not working yet (I will fix this after pynecone version upgrade)
+        # SidebarState.set_is_loaded(False)
         SidebarState.init,
         QueryState.init,
     ],

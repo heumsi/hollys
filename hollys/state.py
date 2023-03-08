@@ -18,6 +18,9 @@ def get_version() -> str:
 class GlobalState(BaseState):
     version: str = get_version()
 
+    def redirect(self, path: str):
+        return pc.redirect(path)
+
 
 class SidebarState(BaseState):
     saved_queries: List[model.SavedQuery] = []
@@ -121,7 +124,6 @@ class SavedQueryState(BaseState):
 
     def delete(self):
         api.remove_saved_query(self.id)
-        return [SidebarState.refresh_saved_queries, pc.redirect("/")]
 
     @pc.var
     def labels_empty(self) -> bool:
@@ -225,7 +227,9 @@ class SaveModalState(BaseState):
         self.show = not self.show
         return [
             self.reset,
+            SidebarState.set_is_loaded(False),
             SidebarState.refresh_saved_queries,
+            SidebarState.set_is_loaded(True),
         ]
 
     def reset(self) -> None:

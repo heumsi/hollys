@@ -1,7 +1,7 @@
 import pynecone as pc
 
 from hollys.layout import page
-from hollys.state import SavedQueryState, SnippetModalState
+from hollys.state import GlobalState, SavedQueryState, SidebarState, SnippetModalState
 from hollys.style import get_color
 
 
@@ -29,7 +29,10 @@ def content():
                         "color": "#000000",
                         "cursor": "pointer",
                     },
-                    on_click=SavedQueryState.delete,
+                    on_click=[
+                        SavedQueryState.delete,
+                        lambda: GlobalState.redirect("/"),
+                    ],
                 ),
                 spacing="1rem",
             ),
