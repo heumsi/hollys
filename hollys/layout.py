@@ -55,7 +55,7 @@ def sidebar():
                             ],
                             font_size="sm",
                         ),
-                        href="/queries/" + saved_query.name_,
+                        href="/saved-queries/" + saved_query.id,
                     ),
                     padding="0.2rem 0",
                     color="#00000080",

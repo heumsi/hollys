@@ -16,5 +16,5 @@ from hollys.page import query, saved_query
 app = pc.App(state=state.BaseState)
 app.add_page(query.index, route="/", on_load=QueryState.init)
 app.add_page(query.index, route="/query", on_load=QueryState.init)
-app.add_page(saved_query.index, route="/queries/[name]")
+app.add_page(saved_query.index, route="/saved-queries/[id]")
 app.compile()
