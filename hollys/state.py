@@ -20,9 +20,15 @@ class GlobalState(BaseState):
 
 
 class SidebarState(BaseState):
-    saved_queries: List[model.SavedQuery] = api.list_saved_query()
+    saved_queries: List[model.SavedQuery] = []
+    is_loaded: bool = False
 
-    def refresh_saved_queries(self) -> None:
+    def init(self):
+        self.is_loaded = False
+        self.saved_queries = api.list_saved_query()
+        self.is_loaded = True
+
+    def refresh_saved_queries(self):
         self.saved_queries = api.list_saved_query()
 
 
@@ -32,7 +38,7 @@ class QueryState(BaseState):
     taint: str
     taints: List[str] = []
     nodes: List[str] = []
-    is_loaded: bool = True
+    is_loaded: bool = False
 
     def init(self):
         # comment(heumsi): these codes should be modified after following issue resolved.
@@ -218,7 +224,7 @@ class SaveModalState(BaseState):
         api.add_saved_query(saved_query)
         self.show = not self.show
         return [
-            self.reset(),
+            self.reset,
             SidebarState.refresh_saved_queries,
         ]
 

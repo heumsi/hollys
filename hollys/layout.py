@@ -37,32 +37,39 @@ def sidebar():
             pc.text(
                 "Saved Queries".upper(), font_size="xs", weight="300", margin="1rem 0"
             ),
-            pc.foreach(
-                SidebarState.saved_queries,
-                lambda saved_query: pc.box(
-                    pc.link(
-                        pc.text(
-                            saved_query.name_,
-                            padding="0 0 0 0.5rem",
-                            # comment(heumsi): Not used yet. but will be used after following issue is resolved.
-                            # https://github.com/pynecone-io/pynecone/issues/609
-                            # on_click=lambda: SavedQueryState.init,
-                            on_click=[
-                                lambda: SavedQueryState.set_is_loaded(False),
-                                lambda: SavedQueryState.set_by_model(saved_query),
-                                SavedQueryState.refresh_nodes,
-                                lambda: SavedQueryState.set_is_loaded(True),
-                            ],
-                            font_size="sm",
+            pc.cond(
+                SidebarState.is_loaded,
+                pc.foreach(
+                    SidebarState.saved_queries,
+                    lambda saved_query: pc.box(
+                        pc.link(
+                            pc.text(
+                                saved_query.name_,
+                                padding="0 0 0 0.5rem",
+                                # comment(heumsi): Not used yet. but will be used after following issue is resolved.
+                                # https://github.com/pynecone-io/pynecone/issues/609
+                                # on_click=lambda: SavedQueryState.init,
+                                on_click=[
+                                    lambda: SavedQueryState.set_is_loaded(False),
+                                    lambda: SavedQueryState.set_by_model(saved_query),
+                                    SavedQueryState.refresh_nodes,
+                                    lambda: SavedQueryState.set_is_loaded(True),
+                                ],
+                                font_size="sm",
+                            ),
+                            href="/saved-queries/" + saved_query.id,
                         ),
-                        href="/saved-queries/" + saved_query.id,
+                        padding="0.2rem 0",
+                        color="#00000080",
+                        _hover={
+                            "color": "#000000",
+                            "cursor": "pointer",
+                        },
                     ),
-                    padding="0.2rem 0",
-                    color="#00000080",
-                    _hover={
-                        "color": "#000000",
-                        "cursor": "pointer",
-                    },
+                ),
+                pc.center(
+                    pc.spinner(size="lg"),
+                    margin_top="3rem",
                 ),
             ),
             padding_top="1rem",
