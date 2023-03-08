@@ -33,7 +33,10 @@ def get_nodes(
 
 def list_saved_query() -> List[model.SavedQuery]:
     with pc.session() as session:
-        return session.query(model.SavedQuery).all()
+        return sorted(
+            session.query(model.SavedQuery).all(),
+            key=lambda saved_query: saved_query.name_,
+        )
 
 
 # comment(heumsi): Not used yet. but will be used after following issue is resolved.
