@@ -1,7 +1,7 @@
 import pynecone as pc
 from kubernetes import config
 
-from hollys.state import QueryState, SavedQueryState, SidebarState
+from hollys.state import QueryState, SidebarState
 
 # comment(heumsi): kube config needs to be loaded first before any other packages are imported.
 try:

@@ -6,7 +6,6 @@ from hollys.state import (
     GlobalState,
     NodeDetailModalState,
     SavedQueryState,
-    SidebarState,
     SnippetModalState,
 )
 from hollys.style import get_color

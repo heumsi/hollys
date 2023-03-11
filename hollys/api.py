@@ -2,7 +2,6 @@ from typing import List, Optional
 
 import pynecone as pc
 from kubernetes import client
-from sqlmodel import select
 
 from hollys import model
 from hollys.model import NodeDetail
