@@ -13,7 +13,13 @@ except:
 from hollys import state
 from hollys.page import query, saved_query
 
-app = pc.App(state=state.BaseState)
+meta = {
+    "title": "Hollys",
+}
+
+app = pc.App(
+    state=state.BaseState,
+)
 app.add_page(
     query.index,
     route="/",
@@ -23,7 +29,17 @@ app.add_page(
         SidebarState.init,
         QueryState.init,
     ],
+    **meta,
 )
-app.add_page(query.index, route="/query", on_load=[SidebarState.init, QueryState.init])
-app.add_page(saved_query.index, route="/saved-queries/[id]")
+app.add_page(
+    query.index,
+    route="/query",
+    on_load=[SidebarState.init, QueryState.init],
+    **meta,
+)
+app.add_page(
+    saved_query.index,
+    route="/saved-queries/[id]",
+    **meta,
+)
 app.compile()
