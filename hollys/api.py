@@ -5,6 +5,7 @@ from kubernetes import client
 from sqlmodel import select
 
 from hollys import model
+from hollys.model import NodeDetail
 
 
 def get_nodes(
@@ -29,6 +30,25 @@ def get_nodes(
                 if str_ in taints:
                     nodes.append(node)
         return [node.metadata.name for node in nodes]
+
+
+def get_node_detail(node_name: str) -> NodeDetail:
+    # TODO(heumsi): This will need to be optimized later.
+    ## This can be solved without having to get a new node like we do now.
+    v1_api = client.CoreV1Api()
+    node = v1_api.list_node(label_selector=f"kubernetes.io/hostname={node_name}").items[
+        0
+    ]
+    labels = [f"{k}={v}" for k, v in node.metadata.labels.items()]
+    taints = []
+    if node.spec.taints:
+        for taint in node.spec.taints:
+            if taint.value:
+                str_ = f"{taint.key}={taint.value}:{taint.effect}"
+            else:
+                str_ = f"{taint.key}:{taint.effect}"
+            taints.append(str_)
+    return NodeDetail(name=node.metadata.name, labels=labels, taints=taints)
 
 
 def list_saved_query() -> List[model.SavedQuery]:

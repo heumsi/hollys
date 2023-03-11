@@ -2,6 +2,7 @@ import uuid
 from typing import List
 
 import pynecone as pc
+from pydantic import BaseModel
 from sqlmodel import JSON, Column, Field, String
 
 
@@ -19,3 +20,9 @@ class SavedQuery(pc.Model, table=True):
 
 
 pc.Model.create_all()
+
+
+class NodeDetail(BaseModel):
+    name: str
+    labels: List[str]
+    taints: List[str]

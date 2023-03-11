@@ -255,3 +255,20 @@ class SnippetModalState(BaseState):
 
     def toggle_show(self) -> None:
         self.show = not self.show
+
+
+class NodeDetailModalState(BaseState):
+    show: bool = False
+    name: str = ""
+    labels: List[str] = []
+    taints: List[str] = []
+    is_loaded: bool = False
+
+    def toggle_show(self) -> None:
+        self.show = not self.show
+
+    def set_by_node_name(self, node_name: str):
+        node_detail = api.get_node_detail(node_name)
+        self.name = node_detail.name
+        self.labels = node_detail.labels
+        self.taints = node_detail.taints

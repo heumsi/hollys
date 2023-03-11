@@ -1,7 +1,8 @@
 import pynecone as pc
 
+from hollys.component.node_detail_modal import node_detail_modal
 from hollys.layout import page
-from hollys.state import QueryState, SaveModalState
+from hollys.state import NodeDetailModalState, QueryState, SaveModalState
 from hollys.style import get_color
 
 
@@ -233,6 +234,16 @@ def content():
                                 display="inline-block",
                                 bg=get_color("gray", 50),
                                 font_size="sm",
+                                on_click=[
+                                    NodeDetailModalState.toggle_show,
+                                    lambda: NodeDetailModalState.set_is_loaded(False),
+                                    lambda: NodeDetailModalState.set_by_node_name(node),
+                                    lambda: NodeDetailModalState.set_is_loaded(True),
+                                ],
+                                _hover={
+                                    "cursor": "pointer",
+                                    "background_color": get_color("gray", 200),
+                                },
                             ),
                         ),
                         pc.center(
@@ -247,6 +258,7 @@ def content():
             ),
         ),
         save_modal(),
+        node_detail_modal(),
         width="80%",
         height="100%",
         padding="1rem",
