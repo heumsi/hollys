@@ -185,7 +185,34 @@ def content():
         pc.box(
             pc.heading("Result", size="md", padding="1rem 0"),
             pc.box(
-                pc.heading("Nodes", size="sm", padding="1rem 0"),
+                pc.hstack(
+                    pc.heading("Nodes", size="sm", padding="1rem 0"),
+                    # comment(heumsi):
+                    # Having the icon and tooltip nested inside copy_to_clipboard didn't work, so I separated them.
+                    pc.copy_to_clipboard(
+                        pc.icon(
+                            tag="copy",
+                            color="#00000080",
+                            _hover={
+                                "color": "#000000",
+                                "cursor": "pointer",
+                            },
+                            on_click=lambda: QueryState.set_is_copied_tooltip_opened(
+                                True
+                            ),
+                            on_mouse_out=lambda: QueryState.set_is_copied_tooltip_opened(
+                                False
+                            ),
+                        ),
+                        text=QueryState.nodes_as_str,
+                    ),
+                    pc.tooltip(
+                        pc.text(""),
+                        label="Copied",
+                        is_open=QueryState.is_copied_tooltip_opened,
+                    ),
+                    spacing="0.5rem",
+                ),
                 pc.text(
                     QueryState.nodes.length()
                     + " items",  # comment(heumsi): It seems that f-string is not supported yet.

@@ -42,6 +42,11 @@ class QueryState(BaseState):
     taints: List[str] = []
     nodes: List[str] = []
     is_loaded: bool = False
+    is_copied_tooltip_opened: bool = False
+
+    @pc.var
+    def nodes_as_str(self) -> str:
+        return self.nodes
 
     def init(self):
         # comment(heumsi): these codes should be modified after following issue resolved.
@@ -90,6 +95,7 @@ class SavedQueryState(BaseState):
     id: str = ""
     is_loaded: bool = False
     nodes: List[str] = []
+    is_copied_tooltip_opened: bool = False
 
     # comment(heumsi): Not used yet. but will be used after following issue is resolved.
     # https://github.com/pynecone-io/pynecone/issues/609
@@ -111,6 +117,10 @@ class SavedQueryState(BaseState):
     #     self.labels = saved_query.labels
     #     self.taints = saved_query.taints
     #     return self.refresh_nodes
+
+    @pc.var
+    def nodes_as_str(self) -> str:
+        return self.nodes
 
     def set_by_model(self, saved_query: model.SavedQuery):
         self.id = saved_query["id"]
